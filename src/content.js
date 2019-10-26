@@ -2,11 +2,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Frame, { FrameContextConsumer } from 'react-frame-component'
-import openSocket from 'socket.io-client'
 import Begin from './components/Begin'
 import Chat from './components/Chat'
 import Context from './context/index'
-import { serverUrl } from './constants'
+import 'shards-ui/dist/css/shards.min.css'
 import './content.css'
 
 export default class Main extends React.Component {
@@ -14,22 +13,12 @@ export default class Main extends React.Component {
     super(props)
     this.state = {
       chat: false,
+      messageData: [],
     }
-    this.socket = openSocket(serverUrl)
-  }
-
-  componentDidMount() {
-    this.socket.on('connect', () => {
-      console.log('Connected with socket id:', this.socket.id)
-    })
   }
 
   render() {
-    const element = this.state.chat ? (
-      <Chat socket={this.socket} />
-    ) : (
-      <Begin socket={this.socket} />
-    )
+    const element = this.state.chat ? <Chat /> : <Begin />
     return (
       <Context.Provider
         value={{
@@ -37,6 +26,8 @@ export default class Main extends React.Component {
           setChat: c => this.setState({ chat: c }),
           messageData: this.state.messageData,
           setMessageData: c => this.setState({ messageData: c }),
+          socket: this.state.socket,
+          setSocket: c => this.setState({ socket: c }),
         }}
       >
         <Frame
@@ -49,9 +40,7 @@ export default class Main extends React.Component {
           ]}
         >
           <FrameContextConsumer>
-            {// Callback is invoked with iframe's window and document instances
-            ({ document, window }) => {
-              // Render Children
+            {({ document, window }) => {
               document.body.style = 'background-color: #282c34;'
               return <div>{element}</div>
             }}

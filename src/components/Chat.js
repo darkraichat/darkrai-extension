@@ -1,13 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Formik } from 'formik'
 import { FormInput, Form, Button } from 'shards-react'
-import Bubble from './Bubble'
 import Context from '../context'
 import './Chat.css'
 
-export default ({ socket }) => {
+const Message = ({ by, content, user }) => (
+  <span
+    style={{
+      padding: 4,
+      color: user ? 'cyan' : 'white',
+    }}
+  >
+    {by}: {content}
+  </span>
+)
+
+const Chat = () => {
   const [height, setHeight] = useState(window.innerHeight - 200)
-  const { messageData, setMessageData } = useContext(Context)
+  const { messageData, setMessageData, socket } = useContext(Context)
   const messages = messageData || []
 
   // Recieve effect
@@ -48,8 +58,8 @@ export default ({ socket }) => {
         {messages.map(c => {
           const name = sessionStorage.getItem('NAME')
           if (name === c.username)
-            return <Bubble by={c.username} content={c.message} user />
-          return <Bubble by={c.username} content={c.message} />
+            return <Message by={c.username} content={c.message} user />
+          return <Message by={c.username} content={c.message} />
         })}
       </div>
       <div style={{ padding: 30 }}>
@@ -82,3 +92,5 @@ export default ({ socket }) => {
     </div>
   )
 }
+
+export default Chat
