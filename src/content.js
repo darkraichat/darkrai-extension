@@ -6,7 +6,6 @@ import Begin from './components/Begin'
 import Chat from './components/Chat'
 import Context from './context/index'
 import 'shards-ui/dist/css/shards.min.css'
-import './content.css'
 
 export default class Main extends React.Component {
   constructor(props) {
