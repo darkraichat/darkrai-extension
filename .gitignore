@@ -102,5 +102,6 @@ typings/
 # VSCode settings
 .vscode
 
-# Build folder
+# Build/Distribution folder
 build
+dist

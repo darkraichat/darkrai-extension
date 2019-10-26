@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Formik } from 'formik'
 import { FormInput, Form, Button } from 'shards-react'
 import Context from '../context'
-import './Chat.css'
+import './Chat.scss'
 
 const Message = ({ by, content, user }) => (
   <span

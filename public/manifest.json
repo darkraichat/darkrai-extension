@@ -1,10 +1,10 @@
 {
   "short_name": "Darkai",
-  "name": "Darkai",
+  "name": "Darkai Browser Extension",
   "version": "1.0.0",
   "manifest_version": 2,
   "background": {
-    "scripts": ["app/background.js"]
+    "scripts": ["static/js/background.js"]
   },
   "icons": {
     "48": "icon-48.png"
@@ -15,11 +15,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["/static/css/app.css"],
-      "js": ["/static/js/content.js"]
+      "css": ["static/css/extension.css"],
+      "js": ["static/js/content.js"]
     }
   ],
-  "web_accessible_resources": ["/static/css/content.css"],
-  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'",
+  "web_accessible_resources": ["static/css/content.css"],
   "permissions": ["tabs"]
 }

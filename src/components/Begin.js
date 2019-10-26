@@ -6,7 +6,7 @@ import axios from 'axios'
 import queryString from 'query-string'
 import Context from '../context'
 import { serverUrl } from '../constants'
-import './Begin.css'
+import './Begin.scss'
 
 const Begin = () => {
   const { setChat, setMessageData, setSocket } = useContext(Context)
