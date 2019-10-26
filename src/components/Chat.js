@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { FormInput, Form, Button } from 'shards-react'
 import Context from '../context'
@@ -14,6 +15,12 @@ const Message = ({ by, content, user }) => (
     {by}: {content}
   </span>
 )
+
+Message.propTypes = {
+  by: PropTypes.string,
+  content: PropTypes.string,
+  user: PropTypes.bool,
+}
 
 const Chat = () => {
   const [height, setHeight] = useState(window.innerHeight - 200)
@@ -55,11 +62,11 @@ const Chat = () => {
           overflowY: 'auto',
         }}
       >
-        {messages.map(c => {
+        {messages.map((c, i) => {
           const name = sessionStorage.getItem('NAME')
           if (name === c.username)
-            return <Message by={c.username} content={c.message} user />
-          return <Message by={c.username} content={c.message} />
+            return <Message key={i} by={c.username} content={c.message} user />
+          return <Message key={i} by={c.username} content={c.message} />
         })}
       </div>
       <div style={{ padding: 30 }}>
