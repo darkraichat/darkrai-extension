@@ -34,6 +34,7 @@ export default class Main extends React.Component {
             <link
               type="text/css"
               rel="stylesheet"
+              key="content-css"
               href={chrome.runtime.getURL('/static/css/content.css')}
             ></link>,
           ]}

@@ -7,7 +7,6 @@ require('dotenv').config()
 
 module.exports = {
   plugins: [
-    // Copy static assets from `public` folder to `build` folder
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../public'),
@@ -15,7 +14,7 @@ module.exports = {
       {
         from: path.resolve(__dirname, '../src/extension.scss'),
         to: path.resolve(__dirname, '../dist/static/css/extension.css'),
-        transform(content, path) {
+        transform(content) {
           const result = sass.renderSync({
             data: content.toString(),
             outputStyle: 'compressed',
@@ -24,11 +23,9 @@ module.exports = {
         },
       },
     ]),
-    // Extract CSS into separate files
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].css',
     }),
-    //
     new DefinePlugin({
       'process.env.SERVER_URL': JSON.stringify(process.env.SERVER_URL),
     }),
