@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const sass = require('node-sass')
 const { DefinePlugin } = require('webpack')
-require('dotenv').config()
+const ENV_VARS = require('./env')
 
 module.exports = {
   plugins: [
@@ -26,9 +26,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].css',
     }),
-    new DefinePlugin({
-      'process.env.SERVER_URL': JSON.stringify(process.env.SERVER_URL),
-    }),
+    new DefinePlugin(ENV_VARS),
   ],
   entry: {
     content: path.resolve(__dirname, '../src/content.js'),
