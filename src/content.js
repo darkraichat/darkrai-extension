@@ -7,7 +7,7 @@ import 'shards-ui/dist/css/shards.min.css';
 import App from './App';
 import { store } from './store';
 
-const NewMain = () => {
+const Main = () => {
   return (
     <StoreProvider store={store}>
       <Frame
@@ -31,56 +31,7 @@ const NewMain = () => {
   );
 };
 
-export default NewMain;
-
-// export default class Main extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       nick: undefined,
-//       chat: false,
-//       messageData: [],
-//     };
-//   }
-
-//   render() {
-//     const element = this.state.chat ? <Chat /> : <Begin />;
-//     return (
-//       <StoreProvider store={store}>
-//         <Context.Provider
-//           value={{
-//             chat: this.state.chat,
-//             setChat: c => this.setState({ chat: c }),
-//             messageData: this.state.messageData,
-//             setMessageData: c => this.setState({ messageData: c }),
-//             socket: this.state.socket,
-//             setSocket: c => this.setState({ socket: c }),
-//             nick: this.state.nick,
-//             setNick: c => this.setState({ nick: c }),
-//           }}
-//         >
-//           <Frame
-//             head={[
-//               <link
-//                 type="text/css"
-//                 rel="stylesheet"
-//                 key="content-css"
-//                 href={chrome.runtime.getURL('/static/css/content.css')}
-//               ></link>,
-//             ]}
-//           >
-//             <FrameContextConsumer>
-//               {({ document, window }) => {
-//                 document.body.style = 'background-color: #282c34;';
-//                 return <div>{element}</div>;
-//               }}
-//             </FrameContextConsumer>
-//           </Frame>
-//         </Context.Provider>
-//       </StoreProvider>
-//     );
-//   }
-// }
+export default Main;
 
 const app = document.createElement('div');
 
@@ -88,7 +39,7 @@ app.id = 'my-extension-root';
 
 document.body.appendChild(app);
 
-ReactDOM.render(<NewMain />, app);
+ReactDOM.render(<Main />, app);
 
 app.style.display = 'none';
 
