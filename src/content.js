@@ -1,76 +1,111 @@
-/*global chrome*/
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Frame, { FrameContextConsumer } from 'react-frame-component'
-import Begin from './components/Begin'
-import Chat from './components/Chat'
-import Context from './context/index'
-import 'shards-ui/dist/css/shards.min.css'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { StoreProvider } from 'easy-peasy';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+import 'shards-ui/dist/css/shards.min.css';
 
-export default class Main extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      chat: false,
-      messageData: [],
-    }
-  }
+import App from './App';
+import { store } from './store';
 
-  render() {
-    const element = this.state.chat ? <Chat /> : <Begin />
-    return (
-      <Context.Provider
-        value={{
-          chat: this.state.chat,
-          setChat: c => this.setState({ chat: c }),
-          messageData: this.state.messageData,
-          setMessageData: c => this.setState({ messageData: c }),
-          socket: this.state.socket,
-          setSocket: c => this.setState({ socket: c }),
-        }}
+const NewMain = () => {
+  return (
+    <StoreProvider store={store}>
+      <Frame
+        head={[
+          <link
+            type="text/css"
+            rel="stylesheet"
+            key="content-css"
+            href={chrome.runtime.getURL('/static/css/content.css')}
+          ></link>,
+        ]}
       >
-        <Frame
-          head={[
-            <link
-              type="text/css"
-              rel="stylesheet"
-              key="content-css"
-              href={chrome.runtime.getURL('/static/css/content.css')}
-            ></link>,
-          ]}
-        >
-          <FrameContextConsumer>
-            {({ document, window }) => {
-              document.body.style = 'background-color: #282c34;'
-              return <div>{element}</div>
-            }}
-          </FrameContextConsumer>
-        </Frame>
-      </Context.Provider>
-    )
-  }
-}
+        <FrameContextConsumer>
+          {({ document, window }) => {
+            document.body.style = 'background-color: #282c34;';
+            return <App />;
+          }}
+        </FrameContextConsumer>
+      </Frame>
+    </StoreProvider>
+  );
+};
 
-const app = document.createElement('div')
+export default NewMain;
 
-app.id = 'my-extension-root'
+// export default class Main extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       nick: undefined,
+//       chat: false,
+//       messageData: [],
+//     };
+//   }
 
-document.body.appendChild(app)
+//   render() {
+//     const element = this.state.chat ? <Chat /> : <Begin />;
+//     return (
+//       <StoreProvider store={store}>
+//         <Context.Provider
+//           value={{
+//             chat: this.state.chat,
+//             setChat: c => this.setState({ chat: c }),
+//             messageData: this.state.messageData,
+//             setMessageData: c => this.setState({ messageData: c }),
+//             socket: this.state.socket,
+//             setSocket: c => this.setState({ socket: c }),
+//             nick: this.state.nick,
+//             setNick: c => this.setState({ nick: c }),
+//           }}
+//         >
+//           <Frame
+//             head={[
+//               <link
+//                 type="text/css"
+//                 rel="stylesheet"
+//                 key="content-css"
+//                 href={chrome.runtime.getURL('/static/css/content.css')}
+//               ></link>,
+//             ]}
+//           >
+//             <FrameContextConsumer>
+//               {({ document, window }) => {
+//                 document.body.style = 'background-color: #282c34;';
+//                 return <div>{element}</div>;
+//               }}
+//             </FrameContextConsumer>
+//           </Frame>
+//         </Context.Provider>
+//       </StoreProvider>
+//     );
+//   }
+// }
 
-ReactDOM.render(<Main />, app)
+const app = document.createElement('div');
 
-app.style.display = 'none'
+app.id = 'my-extension-root';
+
+document.body.appendChild(app);
+
+ReactDOM.render(<NewMain />, app);
+
+app.style.display = 'none';
 
 function toggle() {
   if (app.style.display === 'none') {
-    app.style.display = 'block'
+    app.style.display = 'block';
   } else {
-    app.style.display = 'none'
+    app.style.display = 'none';
   }
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.message === 'clicked_browser_action') {
-    toggle()
+  const { message, nickname } = request;
+  if (message === 'clicked_browser_action') {
+    if (nickname !== undefined) {
+      store.dispatch(store.getActions().setNickname(nickname));
+    }
+    toggle();
   }
-})
+});
