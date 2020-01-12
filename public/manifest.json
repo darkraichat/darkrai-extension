@@ -20,5 +20,5 @@
     }
   ],
   "web_accessible_resources": ["static/css/content.css"],
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "storage"]
 }

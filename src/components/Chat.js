@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Formik } from 'formik'
-import { FormInput, Form, Button } from 'shards-react'
-import Context from '../context'
-import './Chat.scss'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Formik } from 'formik';
+import { FormInput, Form, Button } from 'shards-react';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+
+import './Chat.scss';
 
 const Message = ({ by, content, user }) => (
   <span
@@ -14,40 +15,41 @@ const Message = ({ by, content, user }) => (
   >
     {by}: {content}
   </span>
-)
+);
 
 Message.propTypes = {
   by: PropTypes.string,
   content: PropTypes.string,
   user: PropTypes.bool,
-}
+};
 
 const Chat = () => {
-  const [height, setHeight] = useState(window.innerHeight - 200)
-  const { messageData, setMessageData, socket } = useContext(Context)
-  const messages = messageData || []
+  const [height, setHeight] = useState(window.innerHeight - 200);
+  const { messageData, socket, nickname } = useStoreState(state => state);
+  const setMessageData = useStoreActions(actions => actions.setMessageData);
+  const messages = messageData || [];
 
   // Recieve effect
   useEffect(() => {
-    socket.on('receive_M', data => {
-      setMessageData([...messages, data])
-    })
-  }, [messageData, messages, setMessageData, socket])
+    socket.on('receive_message', data => {
+      setMessageData([...messages, data]);
+    });
+  }, [messageData, messages, setMessageData, socket]);
 
   // Delete effect
   useEffect(() => {
     socket.on('delete_message', data => {
-      const temp = messages.filter(item => item.message !== data.message)
-      setMessageData(temp)
-    })
-  }, [messageData, messages, setMessageData, socket])
+      const temp = messages.filter(item => item.message !== data.message);
+      setMessageData(temp);
+    });
+  }, [messageData, messages, setMessageData, socket]);
 
   // Window listener
   useEffect(() => {
-    window.addEventListener('resize', setHeight(window.innerHeight - 200))
+    window.addEventListener('resize', setHeight(window.innerHeight - 200));
     return () =>
-      window.removeEventListener('resize', setHeight(window.innerHeight - 200))
-  }, [])
+      window.removeEventListener('resize', setHeight(window.innerHeight - 200));
+  }, []);
 
   return (
     <div className="Chat-wrapper">
@@ -63,10 +65,9 @@ const Chat = () => {
         }}
       >
         {messages.map((c, i) => {
-          const name = sessionStorage.getItem('NAME')
-          if (name === c.username)
-            return <Message key={i} by={c.username} content={c.message} user />
-          return <Message key={i} by={c.username} content={c.message} />
+          if (nickname === c.username)
+            return <Message key={i} by={c.username} content={c.message} user />;
+          return <Message key={i} by={c.username} content={c.message} />;
         })}
       </div>
       <div style={{ padding: 30 }}>
@@ -75,12 +76,13 @@ const Chat = () => {
             message: '',
           }}
           onSubmit={(values, actions) => {
-            socket.emit('send_M', {
+            socket.emit('send_message', {
               message: values.message,
-            })
-            actions.resetForm()
+            });
+            actions.resetForm();
           }}
-          render={({ handleChange, handleSubmit, values }) => (
+        >
+          {({ handleChange, handleSubmit, values }) => (
             <Form onSubmit={handleSubmit}>
               <FormInput
                 type="text"
@@ -88,16 +90,17 @@ const Chat = () => {
                 onChange={handleChange}
                 value={values.message}
                 style={{ marginRight: 10 }}
+                required
               />
               <Button theme="light" type="submit">
                 Send
               </Button>
             </Form>
           )}
-        />
+        </Formik>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Chat
+export default Chat;
