@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
-import { Container, Form, FormInput, Button } from 'shards-react';
 import openSocket from 'socket.io-client';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import axios from 'axios';
 import queryString from 'query-string';
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -18,6 +17,7 @@ const Starter = () => {
 
   const login = useCallback(username => {
     let socket = openSocket(serverUrl);
+
     if (socket) {
       setSocket(socket);
       socket.on('connection');
@@ -47,35 +47,35 @@ const Starter = () => {
 
   return (
     <div className="Starter-wrapper">
-      <Container>
-        <h1 style={{ color: 'white' }}>Hey!</h1>
-        <p>Start with what you want to be called</p>
-        <Formik
-          onSubmit={async values => {
-            chrome.storage.local.set({ nickname: values.name });
-            login(values.name);
-          }}
-          initialValues={{ name: '' }}
-        >
-          {({ handleSubmit, handleChange, values }) => (
-            <Form onSubmit={handleSubmit}>
-              <FormInput
-                name="name"
-                type="text"
-                value={values.name}
-                placeholder="Enter here!"
-                onChange={handleChange}
-                required
-              />
-              <br />
-              <br />
-              <Button theme="light" type="submit">
-                Start
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Container>
+      <h1>Hey!</h1>
+      <span>Start with what you want to be called</span>
+      <br />
+      <Formik
+        onSubmit={async values => {
+          chrome.storage.local.set({ nickname: values.name });
+          login(values.name);
+        }}
+        initialValues={{ name: '' }}
+      >
+        {({ handleSubmit, handleChange, values }) => (
+          <Form onSubmit={handleSubmit}>
+            <Field
+              name="name"
+              type="text"
+              value={values.name}
+              placeholder="Enter your name here!"
+              onChange={handleChange}
+              required
+              className="darkrai-input"
+            />
+            <br />
+            <br />
+            <button className="darkrai-button" type="submit">
+              Start
+            </button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

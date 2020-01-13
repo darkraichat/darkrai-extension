@@ -3,6 +3,7 @@ import { useStoreState } from 'easy-peasy';
 
 import Starter from './components/Starter';
 import Chat from './components/Chat';
+import './common.scss';
 
 const App = () => {
   const chat = useStoreState(state => state.chat);
