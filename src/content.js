@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { StoreProvider } from 'easy-peasy';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
-import 'shards-ui/dist/css/shards.min.css';
 
 import App from './App';
 import { store } from './store';

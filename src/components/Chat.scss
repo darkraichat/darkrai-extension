@@ -1,4 +1,30 @@
 .Chat-wrapper {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
+  color: white;
+
+  div {
+    margin: 10px;
+  }
+
+  input {
+    width: 250px;
+  }
+
+  .title {
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  .message-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .send-form {
+    margin-bottom: 20px;
+    position: absolute;
+    bottom: 0;
+  }
 }

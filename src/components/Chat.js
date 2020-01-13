@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
-import { FormInput, Form, Button } from 'shards-react';
+import { Formik, Form, Field } from 'formik';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
 import './Chat.scss';
@@ -13,7 +12,7 @@ const Message = ({ by, content, user }) => (
       color: user ? 'cyan' : 'white',
     }}
   >
-    {by}: {content}
+    <b>{by}:</b> {content}
   </span>
 );
 
@@ -54,14 +53,17 @@ const Chat = () => {
   return (
     <div className="Chat-wrapper">
       <div>
-        <h1 style={{ color: 'white', margin: 10 }}>Darkrai</h1>
+        <span className="title">Darkrai</span>
+        <br />
+        <span>
+          chatting as <b>{nickname}</b>
+        </span>
       </div>
+      <br />
       <div
+        className="message-list"
         style={{
           height,
-          display: 'flex',
-          flexDirection: 'column',
-          overflowY: 'auto',
         }}
       >
         {messages.map((c, i) => {
@@ -70,7 +72,7 @@ const Chat = () => {
           return <Message key={i} by={c.username} content={c.message} />;
         })}
       </div>
-      <div style={{ padding: 30 }}>
+      <div className="send-form">
         <Formik
           initialValues={{
             message: '',
@@ -84,17 +86,19 @@ const Chat = () => {
         >
           {({ handleChange, handleSubmit, values }) => (
             <Form onSubmit={handleSubmit}>
-              <FormInput
+              <Field
                 type="text"
                 name="message"
                 onChange={handleChange}
                 value={values.message}
                 style={{ marginRight: 10 }}
+                placeholder="Type here"
                 required
+                className="darkrai-input"
               />
-              <Button theme="light" type="submit">
+              <button className="darkrai-button" type="submit">
                 Send
-              </Button>
+              </button>
             </Form>
           )}
         </Formik>
