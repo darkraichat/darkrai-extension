@@ -1,49 +1,56 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import openSocket from 'socket.io-client';
 import { Formik, Form, Field } from 'formik';
-import axios from 'axios';
-import queryString from 'query-string';
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import { auth } from '../utils/auth';
 
 import { serverUrl } from '../constants';
 import './Starter.scss';
 
 const Starter = () => {
-  const url = window.location.host;
+  const website = window.location.host;
+  const [errorMessage, setErrorMessage] = useState('');
   const { setChat, setMessageData, setSocket } = useStoreActions(
-    actions => actions
+    (actions) => actions
   );
-  const nickname = useStoreState(state => state.nickname);
+  const { username, password } = useStoreState((state) => state);
 
-  const login = useCallback(username => {
-    let socket = openSocket(serverUrl);
-
-    if (socket) {
-      setSocket(socket);
-      socket.on('connection');
-      socket.emit('add_user', {
+  const login = useCallback(
+    async ({ username, password }) => {
+      const { token, error, message, initialMessages } = await auth({
         username,
-        website: url,
+        password,
+        website,
       });
 
-      axios
-        .get(
-          `${serverUrl}/login?` +
-            queryString.stringify({ website: window.location.host })
-        )
-        .then(res => {
-          setMessageData(res.data);
-          setChat(true);
-        })
-        .catch(err => console.log('Error:\n', err));
-    }
-  });
+      if (error) {
+        setErrorMessage(message);
+        return;
+      }
+
+      let socket = openSocket(serverUrl, {
+        query: { token },
+      });
+
+      if (socket) {
+        setSocket(socket);
+        socket.on('connection');
+        socket.emit('add_user', {
+          username,
+          website,
+        });
+        setMessageData(initialMessages);
+        setChat(true);
+      }
+    },
+    [setChat, setMessageData, setSocket, website]
+  );
 
   useEffect(() => {
-    if (nickname !== undefined) {
-      login(nickname);
+    if (username !== undefined) {
+      login({ username, password });
     }
-  }, [login, nickname, setChat, setMessageData, setSocket, url]);
+  }, [login, username, password, setChat, setMessageData, setSocket, website]);
 
   return (
     <div className="Starter-wrapper">
@@ -51,9 +58,8 @@ const Starter = () => {
       <span>Start with what you want to be called</span>
       <br />
       <Formik
-        onSubmit={async values => {
-          chrome.storage.local.set({ nickname: values.name });
-          login(values.name);
+        onSubmit={async (values) => {
+          login({ username: values.name });
         }}
         initialValues={{ name: '' }}
       >
@@ -76,6 +82,7 @@ const Starter = () => {
           </Form>
         )}
       </Formik>
+      <div className="error-message">{errorMessage}</div>
     </div>
   );
 };

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
 import './Chat.scss';
 
-const Message = ({ by, content, user }) => (
+// eslint-disable-next-line react/display-name
+const Message = React.forwardRef(({ by, content, user }, ref) => (
   <span
+    ref={ref}
     style={{
       padding: 4,
       color: user ? 'cyan' : 'white',
@@ -14,7 +16,7 @@ const Message = ({ by, content, user }) => (
   >
     <b>{by}:</b> {content}
   </span>
-);
+));
 
 Message.propTypes = {
   by: PropTypes.string,
@@ -23,31 +25,31 @@ Message.propTypes = {
 };
 
 const Chat = () => {
-  const [height, setHeight] = useState(window.innerHeight - 200);
-  const { messageData, socket, nickname } = useStoreState(state => state);
-  const setMessageData = useStoreActions(actions => actions.setMessageData);
+  const lastMessageRef = useRef(null);
+  const { messageData, socket, username } = useStoreState((state) => state);
+  const setMessageData = useStoreActions((actions) => actions.setMessageData);
   const messages = messageData || [];
 
   // Recieve effect
   useEffect(() => {
-    socket.on('receive_message', data => {
+    socket.on('receive_message', (data) => {
       setMessageData([...messages, data]);
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     });
   }, [messageData, messages, setMessageData, socket]);
 
   // Delete effect
   useEffect(() => {
-    socket.on('delete_message', data => {
-      const temp = messages.filter(item => item.message !== data.message);
+    socket.on('delete_message', (data) => {
+      const temp = messages.filter((item) => item.message !== data.message);
       setMessageData(temp);
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     });
   }, [messageData, messages, setMessageData, socket]);
 
-  // Window listener
+  // Scroll to last message on mount
   useEffect(() => {
-    window.addEventListener('resize', setHeight(window.innerHeight - 200));
-    return () =>
-      window.removeEventListener('resize', setHeight(window.innerHeight - 200));
+    lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   return (
@@ -56,20 +58,21 @@ const Chat = () => {
         <span className="title">Darkrai</span>
         <br />
         <span>
-          chatting as <b>{nickname}</b>
+          chatting as <b>{username}</b>
         </span>
       </div>
       <br />
-      <div
-        className="message-list"
-        style={{
-          height,
-        }}
-      >
+      <div className="message-list">
         {messages.map((c, i) => {
-          if (nickname === c.username)
-            return <Message key={i} by={c.username} content={c.message} user />;
-          return <Message key={i} by={c.username} content={c.message} />;
+          return (
+            <Message
+              key={i}
+              by={c.username}
+              content={c.message}
+              {...(username === c.username && { user: true })}
+              {...(i === messages.length - 1 && { ref: lastMessageRef })}
+            />
+          );
         })}
       </div>
       <div className="send-form">
