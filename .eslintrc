@@ -1,15 +1,22 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["react-hooks"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["react", "react-hooks"],
   "rules": {
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "no-unused-vars": "warn"
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^_" }]
   },
   "parser": "babel-eslint",
   "env": {
     "browser": true,
     "node": true,
     "webextensions": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

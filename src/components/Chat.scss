@@ -1,8 +1,4 @@
 .Chat-wrapper {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  color: white;
-
   div {
     margin: 10px;
   }
@@ -17,6 +13,7 @@
   }
 
   .message-list {
+    height: 70vh;
     display: flex;
     flex-direction: column;
     overflow-y: auto;

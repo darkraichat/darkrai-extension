@@ -20,7 +20,7 @@ const Main = () => {
         ]}
       >
         <FrameContextConsumer>
-          {({ document, window }) => {
+          {({ document }) => {
             document.body.style = 'background-color: #282c34;';
             return <App />;
           }}
@@ -50,11 +50,11 @@ function toggle() {
   }
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  const { message, nickname } = request;
+chrome.runtime.onMessage.addListener(function (request) {
+  const { message, username, password } = request;
   if (message === 'clicked_browser_action') {
-    if (nickname !== undefined) {
-      store.dispatch(store.getActions().setNickname(nickname));
+    if (username !== undefined) {
+      store.dispatch(store.getActions().setUserDetails({ username, password }));
     }
     toggle();
   }
