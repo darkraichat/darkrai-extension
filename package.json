@@ -38,11 +38,11 @@
     "node-sass": "^4.13.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.0",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "^9.0.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9",
     "webpack-extension-reloader": "^1.1.1",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^5.0.9"
   },
   "husky": {
     "hooks": {
