@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -28,7 +28,7 @@ const Chat = () => {
   const lastMessageRef = useRef(null);
   const { messageData, socket, username } = useStoreState((state) => state);
   const setMessageData = useStoreActions((actions) => actions.setMessageData);
-  const messages = messageData || [];
+  const messages = useMemo(() => messageData || [], [messageData]);
 
   // Recieve effect
   useEffect(() => {
