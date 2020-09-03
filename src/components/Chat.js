@@ -30,11 +30,14 @@ const Chat = () => {
   const setMessageData = useStoreActions((actions) => actions.setMessageData);
   const messages = useMemo(() => messageData || [], [messageData]);
 
+  const chatScroll = () =>
+    lastMessageRef?.current?.scrollIntoView({ behavior: 'smooth' });
+
   // Recieve effect
   useEffect(() => {
     socket.on('receive_message', (data) => {
       setMessageData([...messages, data]);
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+      chatScroll();
     });
   }, [messageData, messages, setMessageData, socket]);
 
@@ -43,13 +46,12 @@ const Chat = () => {
     socket.on('delete_message', (data) => {
       const temp = messages.filter((item) => item.message !== data.message);
       setMessageData(temp);
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     });
   }, [messageData, messages, setMessageData, socket]);
 
   // Scroll to last message on mount
   useEffect(() => {
-    lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    chatScroll();
   }, []);
 
   return (
