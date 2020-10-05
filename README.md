@@ -1,5 +1,7 @@
 # Darkrai Browser Extension
 
+Darkrai is a browser extension that will enable the user to chat with any other user visiting the same website as themselves. This extension has various advantages, some of which being meeting people with the same interest, and resolving the doubts for which the website is visited for.
+
 The extension component for the Darkrai browser extension.
 
 You can find the repository for the server [here.](https://github.com/smit2k14/darkrai-server)
