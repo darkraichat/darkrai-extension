@@ -60,6 +60,11 @@ const Chat = () => {
         <span className="title">Darkrai</span>
         <br />
         <span>
+          To Chat with ChatBot type <b>Cb-your query</b>
+        </span>
+        <br />
+        <br />
+        <span>
           chatting as <b>{username}</b>
         </span>
       </div>
