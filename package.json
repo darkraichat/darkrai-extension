@@ -11,7 +11,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "easy-peasy": "^3.2.3",
     "formik": "^2.0.8",
     "normalize.css": "^8.0.1",
